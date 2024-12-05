@@ -1,0 +1,46 @@
+<!-- Archivo: assets/search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barra de Búsqueda</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Buscar Productos</h1>
+    <input type="text" id="search-bar" placeholder="Buscar por nombre o simbología">
+    <ul id="search-results"></ul>
+
+    <script>
+        $(document).ready(function() {
+            $('#search-bar').on('input', function() {
+                const query = $(this).val();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: '/search',
+                        method: 'GET',
+                        data: { q: query },
+                        success: function(data) {
+                            const results = $('#search-results');
+                            results.empty();
+                            data.forEach(product => {
+                                results.append(`
+                                    <li>
+                                        ${product.nombre} (${product.simbologia}) - Variantes: ${product.variantes}
+                                    </li>
+                                `);
+                            });
+                        },
+                        error: function() {
+                            alert('Error al buscar productos.');
+                        }
+                    });
+                } else {
+                    $('#search-results').empty();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
